@@ -1,0 +1,95 @@
+/* 
+#F3F7F8
+#8A9296
+#98C9E9
+#6F6D80
+#0F1832 
+*/
+
+.title h3 {
+    color: #0F1832 ;
+    text-align: center;
+    font-family: 'Monoton', cursive;
+    margin: 0.5rem 0;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.minefield_contaier {
+    border: .1px solid green;
+    display: inline-block;
+    width: 90vw;
+    height: 100vh;
+
+}
+
+#minefield {
+    border: .1px solid red;
+    /* width: 100%; */
+    /* background-color: #0F1832 */
+    /* height: 100%; */
+}
+
+
+.difficulties {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between
+}
+.difficult {
+    font-family: 'Monoton', cursive;
+    margin: .1rem;
+    padding: .5rem;
+    text-align: center;
+    border: #fff 2px solid;
+    border-radius: 15px;
+    transition: .5s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+.thisHard {
+    color: #98C9E9;
+}
+
+.difficult:hover   {
+    border: #0f183241 2px solid;
+}
+.difficulties h6 {
+    font-size: .4rem;
+}
+.difficulties h1 {
+    font-size: 1.5rem;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-evenly;
+    margin: .2rem 0;
+    align-items: bottom;
+    bottom: 5rem;
+}
+
+.emoji {
+    border-radius: 50px;
+    text-align: center;
+    background: yellow;
+    width: 1.5rem;
+} 
+.footer > div {
+    height: 2rem;
+}
+
+
+
+.display canvas {
+    /* width: 5rem; */
+    height: 100%;
+    border-radius: 5px;
+    background-color: black;
+    padding: 3px;
+}
+
+
