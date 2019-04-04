@@ -258,19 +258,19 @@ const rightClickAction = (x, y, state) => {
         minefield[y][x].toggleFlag();
         if(minefield[y][x].isFlagget()){
             newState.mines.flagedAs++;
+            newState.totalToReveal--;
             if( minefield[y][x].isMine() ) {
                 newState.mines.tofind--
-                newState.totalToReveal--
                 if (newState.mines.tofind === 0 && newState.mines.flagedAs <= gameSize.mines ) {
-                    newState.state = 'winner';
+                    newState.status = 'winner';
                     alert('I HAVE WON A LOT OF TROPHIES')
                 }
             };
         } else if (!minefield[y][x].isFlagget()){
-            newState.flaged--;
+            newState.mines.flagedAs--;
+            newState.totalToReveal++;
             if( minefield[y][x].isMine() ) {
                 newState.mines.tofind++
-                newState.totalToReveal--
             }
         }
     }

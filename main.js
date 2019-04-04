@@ -47,7 +47,7 @@ let sendTime = ( state ) => {
 }
 
 
-let pokaz = ( copokazac ) => {console.log(copokazac)}
+let pokaz = ( copokazac ) => {console.log(copokazac.status)}
 export const udawajLewy = (X,Y ) => {
     dispatchAction({
         type: 'leftClick',
@@ -69,7 +69,7 @@ export const udawajPrawy = (X,Y ) => {
 
 let init = () => {
     subscribe(showDifficulty)
-   // subscribe(pokaz)
+   subscribe(pokaz)
     subscribe(showState)
     subscribe(sendTime)
     // subscribe(displayTime)

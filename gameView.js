@@ -105,6 +105,8 @@ const draw = ( status, canvasSelector) => {
             for( let j = 0 ; j < status.length ; j++ ){ 
                 if ( status[j][i] === -1) {
                     drowImg(imgSrc.flag, i, j)
+                } else if ( status[j][i] === 'm') {
+                    drowImg(imgSrc.mine, i, j)
                 } else {
                     context.beginPath();
                     context.font=`${0.7*tileSize}px sans-serif`;
