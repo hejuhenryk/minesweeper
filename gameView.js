@@ -1,8 +1,8 @@
 import { dispatchAction, subscribe } from "./gameLogic.js" //clickedAction,  changeStatusAction, 
+import { display } from "./dispaly.js";
 export { DOMstrings, showDifficulty, showState}
 
 export let tileSize = 30;
-
 
 const DOMstrings = {
     easy: document.querySelector('.easy'),
@@ -51,6 +51,9 @@ const showState = state => {
     draw( status, DOMstrings.minefield )
 } 
 
+// display time
+
+// display mines to find
 
 const draw = ( status, canvasSelector) => {
     const canvas = canvasSelector

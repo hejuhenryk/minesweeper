@@ -66,6 +66,8 @@ let init = () => {
     subscribe(showDifficulty)
     subscribe(pokaz)
     subscribe(showState)
+    // subscribe(displayTime)
+    // subscribe(displayMines)
     save()
     setupListeners();
     dispatchAction({type: 'changeDifficulty', payload: 'medium' })
