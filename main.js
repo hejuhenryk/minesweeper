@@ -1,5 +1,5 @@
-import { DOMstrings, showDifficulty, showState, tileSize } from './gameView.js'
-import { resetGame, setDifficulty,  dispatchAction, subscribe, save } from './gameLogic.js' //leftClick, rightClick,
+import { DOMstrings, showDifficulty, showState, tileSize, changeDisplays } from './gameView.js'
+import { dispatchAction, subscribe, save } from './gameLogic.js' //leftClick, rightClick,
 export {  }
 
 
@@ -42,7 +42,12 @@ const setupListeners = () => {
     })
 }
 
-let pokaz = ( copokazac ) => {console.log(copokazac.board[0][0].isFlagget())}
+let sendTime = ( state ) => {
+    changeDisplays(state.time, state.totalToReveal)
+}
+
+
+let pokaz = ( copokazac ) => {console.log(copokazac)}
 export const udawajLewy = (X,Y ) => {
     dispatchAction({
         type: 'leftClick',
@@ -64,8 +69,9 @@ export const udawajPrawy = (X,Y ) => {
 
 let init = () => {
     subscribe(showDifficulty)
-    subscribe(pokaz)
+   // subscribe(pokaz)
     subscribe(showState)
+    subscribe(sendTime)
     // subscribe(displayTime)
     // subscribe(displayMines)
     save()

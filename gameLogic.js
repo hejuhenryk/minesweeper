@@ -19,7 +19,7 @@ let _curState = {
     time: 0, 
     totalToReveal: undefined,
     // save initial values
-    init: function() {
+    init () {
         var origValues = {};
         for (var prop in this) {
             if (this.hasOwnProperty(prop) && prop != "origValues") {
@@ -29,11 +29,21 @@ let _curState = {
         this.origValues = origValues;
     },
     // restore initial values
-    reset: function() {
+    reset () {
         for (var prop in this.origValues) {
             if ( prop === 'difficulty') continue
             this[prop] = this.origValues[prop];
         }
+    }, 
+    startTimer () {
+        let timerID = window.setInterval( () => {
+            if ( _curState.status !== "started") {
+                window.clearInterval(timerID)
+                return
+            }
+            _curState.time++;
+            notifyAll()
+        }, 1000 )
     }
 }
 
@@ -131,7 +141,6 @@ const update = (action, state) => {
         const ToReveal = gameSize.wide * gameSize.hight;
         // setup new board
         const newBoard = setupMinefield(gameSize.wide, gameSize.hight);
-        console.log('hello from update')
         return { 
             ...state, 
             totalToReveal: ToReveal,
@@ -159,10 +168,7 @@ export const dispatchAction =  (action) => {
     if (!newState) return
 
     statesHistory.push(_curState) 
-    // console.log(statesHistory)
     _curState = newState;
-    console.log(_curState.totalToReveal)
-
     notifyAll();
 }
 
@@ -215,7 +221,7 @@ const leftClickAction = (x, y, state) => {
         if ( newState.status === 'notStarted' ) {
             newState.board = []
             //newState.totalToReveal = gameSize.wide * gameSize.hight;
-
+            newState.startTimer()
             newState.status = 'started'
             minefield = setupMinefield(gameSize.wide, gameSize.hight).map( arr => [...arr]);
             // set mines exlude minefield[y][x] and neighbours
@@ -256,6 +262,7 @@ const rightClickAction = (x, y, state) => {
                 newState.mines.tofind--
                 newState.totalToReveal--
                 if (newState.mines.tofind === 0 && newState.mines.flagedAs <= gameSize.mines ) {
+                    newState.state = 'winner';
                     alert('I HAVE WON A LOT OF TROPHIES')
                 }
             };
@@ -271,7 +278,10 @@ const rightClickAction = (x, y, state) => {
 }
 let revealOne = (x, y, mineArr, state) => {
     state.totalToReveal--
-    if (state.totalToReveal === state.mines.tofind && state.status === 'started') { alert('I HAVE ONLY JUST STARTED WINNING')}
+    if (state.totalToReveal === state.mines.tofind && state.status === 'started') { 
+        alert('I HAVE ONLY JUST STARTED WINNING')
+        state.status = 'winner'
+    }
     mineArr[y][x].setReveal()
 }
 

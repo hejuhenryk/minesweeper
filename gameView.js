@@ -9,12 +9,26 @@ const DOMstrings = {
     medium: document.querySelector('.medium'),
     hard: document.querySelector('.hard'), 
     thisHard: document.querySelector('.thisHard'), 
-    minefield: document.querySelector('#minefield')
+    minefield: document.querySelector('#minefield'), 
+    timer: document.querySelector('#time_counter'),
+    mines: document.querySelector('#mines_counter')
 }
 
 const imgSrc = {
     mine: './grafic/mine.png',
     flag: './grafic/flag.jpg'
+}
+let displays = {
+    timer: display('time_counter', 150, 3),
+    mines: display('mines_counter', 1500, 3)
+}
+
+export const changeDisplays = ( secounds, mines ) => {
+    console.log()
+    displays.timer.clearDisplay()
+    displays.mines.clearDisplay()
+    displays.timer.printNum(secounds)
+    displays.mines.printNum(mines)
 }
 
 // const init = () => {
@@ -38,7 +52,6 @@ const imgSrc = {
 // }
 const showState = state => {
     let status = state.board.map( arr => [...arr])
-    console.log(status)
     for( let i = 0 ; i < status[0].length ; i++  ){
         for( let j = 0 ; j < status.length ; j++ ){  
             if( status[j][i].isFlagget() ){
