@@ -41,6 +41,8 @@ export const save = () => {
     _curState.init()
 }
 
+let bestCopyEver = src => Object.assign({}, src);
+
 const statesHistory = []
 const _listeners = []
 
@@ -124,36 +126,42 @@ const update = (action, state) => {
     // kopia
     if (action.type === "changeDifficulty"){
         let gameSize = getSize(action.payload)
-        // reset game
-        _curState.reset()
-        _curState.totalToReveal = gameSize.wide * gameSize.hight;
+        // // reset game
+        state.reset()
+        const ToReveal = gameSize.wide * gameSize.hight;
         // setup new board
         const newBoard = setupMinefield(gameSize.wide, gameSize.hight);
+        console.log('hello from update')
         return { 
             ...state, 
+            totalToReveal: ToReveal,
             board: newBoard.map( arr => [...arr]), 
-            difficulty: action.payload }
+            difficulty: action.payload
+        }
 
     } else if (action.type === "leftClick") {
-        let newBoard = state.board.map( arr => [...arr])
-        leftClickAction(action.payload.x, action.payload.y, newBoard)
-        return {...state, board: newBoard.map( arr => [...arr])}
+        // let newBoard = state.board.map( arr => [...arr])
+        // leftClickAction(action.payload.x, action.payload.y, newBoard)
+        // return {...state, board: newBoard.map( arr => [...arr])}
+        return leftClickAction(action.payload.x, action.payload.y, state)
     } else if (action.type === "rightClick") {
-        let newBoard = [...state.board]
-        rightClickAction(action.payload.x, action.payload.y, newBoard)
-        return {...state, board: newBoard.map( arr => [...arr])}
+        // let newBoard = [...state.board]
+        // rightClickAction(action.payload.x, action.payload.y, newBoard)
+        // state.board.length = 0;
+        // return {...state, board: newBoard.map( arr => [...arr])}
+        return rightClickAction(action.payload.x, action.payload.y, state)
     }
     return  null
 }
 
 export const dispatchAction =  (action) => {
     const newState = update(action, _curState);
-
     if (!newState) return
 
     statesHistory.push(_curState) 
     // console.log(statesHistory)
     _curState = newState;
+    console.log(_curState.totalToReveal)
 
     notifyAll();
 }
@@ -181,74 +189,90 @@ let setRundomMines = (notX, notY, minefield) => {
     _curState.mines.tofind = gameSize.mines;
 }
 
-const leftClickAction = (x, y, minefield) => {
-    let gameSize = getSize(_curState.difficulty)
-    let checkNeighbours = (x, y, minefield) => {
-        for (let xx = (x === 0 ? x : (x - 1) ) ; xx <= ( x === (minefield[0].length - 1) ? x : (x + 1) ) ; xx++){
-            for (let yy = (!y ? y : (y - 1) ) ; yy <= ( y === (minefield.length  - 1) ? y : (y + 1) ) ; yy++){
+const leftClickAction = (x, y, state) => {
+    const gameSize = getSize(state.difficulty)
+    const newState = bestCopyEver(state)
+    let minefield = newState.board.map( arr => [...arr])
+    const checkNeighbours = (x, y, mineArr, state) => {
+        for (let xx = (x === 0 ? x : (x - 1) ) ; xx <= ( x === (mineArr[0].length - 1) ? x : (x + 1) ) ; xx++){
+            for (let yy = (!y ? y : (y - 1) ) ; yy <= ( y === (mineArr.length  - 1) ? y : (y + 1) ) ; yy++){
                 if ( (xx !== x || yy !== y) ) {
-                    if ( !minefield[yy][xx].isRevealed() ) {
-                        revealOne( xx, yy, minefield);
-                        if ( minefield[yy][xx].findMines() === 0 ) {
-                            checkNeighbours(xx, yy, minefield);
+                    if ( !mineArr[yy][xx].isRevealed() ) {
+                        revealOne( xx, yy, mineArr, newState);
+                        if ( mineArr[yy][xx].findMines() === 0 ) {
+                            checkNeighbours(xx, yy, mineArr);
                         }
                     }
                 }
             }
         }
     }
-    if ( _curState.status === 'gameOver') return
+    if ( newState.status === 'gameOver') return 
     if (x <= gameSize.wide && y <= gameSize.hight){
 
-        if ( minefield[y][x].isFlagget() ) return
+        if ( minefield[y][x].isFlagget() ) return 
         
-        if ( _curState.status === 'notStarted' ) {
-            _curState.reset()
-            _curState.status = 'started'
+        if ( newState.status === 'notStarted' ) {
+            newState.board = []
+            //newState.totalToReveal = gameSize.wide * gameSize.hight;
+
+            newState.status = 'started'
+            minefield = setupMinefield(gameSize.wide, gameSize.hight).map( arr => [...arr]);
             // set mines exlude minefield[y][x] and neighbours
             setRundomMines(x, y, minefield)
         } 
+
         if( minefield[y][x].isMine() ){
-            _curState.status = 'gameOver';
+            newState.status = 'gameOver';
             revealAll(minefield)
             alert('gameOver')
-            return     
+            return { ...newState, board: minefield.map( arr => [...arr]) }    
         } else if ( !minefield[y][x].isRevealed() ) {
-            revealOne( x, y, minefield )
+            revealOne( x, y, minefield, newState )
             if ( minefield[y][x].findMines() === 0 ) {
-                checkNeighbours(x, y, minefield);
+                checkNeighbours(x, y, minefield, newState);
             }
         }
+        // console.log( newState.totalToReveal === newState.mines.tofind)
+        // console.log( newState.totalToReveal, newState.mines.tofind)
+        // if( newState.totalToReveal === newState.mines.tofind ){
+        //     alert('This is fun, watch your arms there lefted just mines')
+        // }
+
     } 
+    return { ...newState, board: minefield.map( arr => [...arr]) }
 
 }
 
-const rightClickAction = (x, y, minefield) => {
+const rightClickAction = (x, y, state) => {
     let gameSize = getSize(_curState.difficulty)
+    const newState = bestCopyEver(state)
+    let minefield = newState.board.map( arr => [...arr])
     if (minefield[y][x].getState() === undefined){
         minefield[y][x].toggleFlag();
         if(minefield[y][x].isFlagget()){
-            _curState.mines.flagedAs++;
+            newState.mines.flagedAs++;
             if( minefield[y][x].isMine() ) {
-                _curState.mines.tofind--
-                _curState.totalToReveal--
-                if (_curState.mines.tofind === 0 && _curState.mines.flagedAs <= gameSize.mines ) {
+                newState.mines.tofind--
+                newState.totalToReveal--
+                if (newState.mines.tofind === 0 && newState.mines.flagedAs <= gameSize.mines ) {
                     alert('I HAVE WON A LOT OF TROPHIES')
                 }
             };
         } else if (!minefield[y][x].isFlagget()){
-            _curState.flaged--;
+            newState.flaged--;
             if( minefield[y][x].isMine() ) {
-                _curState.mines.tofind++
-                _curState.totalToReveal--
+                newState.mines.tofind++
+                newState.totalToReveal--
             }
         }
     }
+    return { ...newState, board: minefield.map( arr => [...arr]) }
 }
-let revealOne = (x, y, minefield) => {
-    _curState.totalToReveal--
-    if (_curState.totalToReveal === _curState.mines.tofind && _curState.status === 'started') { alert('I HAVE ONLY JUST STARTED WINNING')}
-    minefield[y][x].setReveal()
+let revealOne = (x, y, mineArr, state) => {
+    state.totalToReveal--
+    if (state.totalToReveal === state.mines.tofind && state.status === 'started') { alert('I HAVE ONLY JUST STARTED WINNING')}
+    mineArr[y][x].setReveal()
 }
 
 let revealAll = (minefield) => {
