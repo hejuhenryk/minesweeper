@@ -25,9 +25,10 @@ let display = (canvasID, blockWidth, numBlocks) => {
         let endArc = xStart === xEnd ? Math.PI : (0.5 * Math.PI) ;
     
         let printSegment = () => {
-            context.strokeStyle = `rgb(255, 0 , 0, ${on ? 1 : 0.3} )`;
-            context.fillStyle = `rgb(255, 0 , 0, ${on ? 1 : 0.3} )`;
-    
+            context.strokeStyle = `rgb(152, 201 , 233, ${on ? 1 : 0.1} )`;
+            context.fillStyle = `rgb(152, 201 , 233, ${on ? 1 : 0.1} )`;
+            // context.strokeStyle = `rgb(255, 0 , 0, ${on ? 1 : 0.2} )`;
+            // context.fillStyle = `rgb(255, 0 , 0, ${on ? 1 : 0.2} )`;
             context.beginPath();
             context.arc(xStart , yStart , thick/2, startArc, endArc, true);
             context.fill();
