@@ -5,6 +5,9 @@
 #6F6D80
 #0F1832 
 */
+body {
+    background: #F3F7F8;
+}
 
 .title h3 {
     color: #0F1832 ;
@@ -102,7 +105,8 @@
     margin: .1rem;
     padding: .5rem;
     text-align: center;
-    border: #fff 1px solid;
+    border: #F3F7F8
+    1px solid;
     border-radius: 10px;
     transition: .5s cubic-bezier(0.47, 0, 0.745, 0.715);
     width: 2rem

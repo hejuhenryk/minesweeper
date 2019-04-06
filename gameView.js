@@ -21,7 +21,9 @@ const DOMstrings = {
 //"https://www.flaticon.com/authors/freepik"  *Designed by Freepik from www.flaticon.com* 
 const imgSrc = {
     mine: './grafic/mine.svg',
-    flag: './grafic/flag.svg'
+    flag: './grafic/flag.svg', 
+    flag_fail: './grafic/flag_fail.svg'
+
 }
 let displays = {
     timer: display('time_counter', 150, 3),

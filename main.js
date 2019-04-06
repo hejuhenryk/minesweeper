@@ -1,5 +1,5 @@
 import { DOMstrings, showDifficulty, showState, tileSize, changeDisplays } from './gameView.js'
-import { dispatchAction, subscribe, save } from './gameLogic.js' //leftClick, rightClick,
+import { dispatchAction, subscribe, save, getSize } from './gameLogic.js' //leftClick, rightClick,
 export { popupWindow }
 
 
@@ -65,8 +65,9 @@ let popupWindow = ( message ) => {
     })
 }
 
-let sendTime = ( state ) => {
-    changeDisplays(state.time, state.mines )
+let sendToDispaly = ( state ) => {
+    let minesToShow = getSize(state.difficulty).mines - state.mines.flagedAs
+    changeDisplays(state.time, minesToShow )
 }
 
 
@@ -94,7 +95,7 @@ let init = () => {
     subscribe(showDifficulty)
    subscribe(pokaz)
     subscribe(showState)
-    subscribe(sendTime)
+    subscribe(sendToDispaly)
     // subscribe(displayTime)
     // subscribe(displayMines)
     save()
