@@ -1,3 +1,4 @@
+import { popupWindow } from "./main.js";
 
 // const _currentState = {
 //     board: [0,0,0],
@@ -78,11 +79,11 @@ export const setDifficulty = (diff) => {
 
 export const getSize = difficulty => {
     if ( difficulty === 'easy'){
-        return { wide: 4, hight: 4, mines: 2}
+        return { wide: 8, hight: 6, mines: 9}
     } else if ( difficulty === 'medium'){
-        return { wide: 6, hight: 6, mines: 3}
+        return { wide: 10, hight: 8, mines: 20}
     } else if ( difficulty === 'hard'){
-        return { wide: 8, hight: 8, mines: 30}
+        return { wide:12   , hight:12, mines: 59}
     } else {
         alert('oh No no size')
     }
@@ -231,7 +232,7 @@ const leftClickAction = (x, y, state) => {
         if( minefield[y][x].isMine() ){
             newState.status = 'gameOver';
             revealAll(minefield)
-            alert('gameOver')
+            popupWindow('loser')
             return { ...newState, board: minefield.map( arr => [...arr]) }    
         } else if ( !minefield[y][x].isRevealed() ) {
             revealOne( x, y, minefield, newState )
@@ -239,12 +240,6 @@ const leftClickAction = (x, y, state) => {
                 checkNeighbours(x, y, minefield, newState);
             }
         }
-        // console.log( newState.totalToReveal === newState.mines.tofind)
-        // console.log( newState.totalToReveal, newState.mines.tofind)
-        // if( newState.totalToReveal === newState.mines.tofind ){
-        //     alert('This is fun, watch your arms there lefted just mines')
-        // }
-
     } 
     return { ...newState, board: minefield.map( arr => [...arr]) }
 
@@ -263,7 +258,7 @@ const rightClickAction = (x, y, state) => {
                 newState.mines.tofind--
                 if (newState.mines.tofind === 0 && newState.mines.flagedAs <= gameSize.mines ) {
                     newState.status = 'winner';
-                    alert('I HAVE WON A LOT OF TROPHIES')
+                    popupWindow('winner')
                 }
             };
         } else if (!minefield[y][x].isFlagget()){
@@ -279,7 +274,7 @@ const rightClickAction = (x, y, state) => {
 let revealOne = (x, y, mineArr, state) => {
     state.totalToReveal--
     if (state.totalToReveal === state.mines.tofind && state.status === 'started') { 
-        alert('I HAVE ONLY JUST STARTED WINNING')
+        popupWindow('winner')
         state.status = 'winner'
     }
     mineArr[y][x].setReveal()

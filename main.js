@@ -1,6 +1,6 @@
 import { DOMstrings, showDifficulty, showState, tileSize, changeDisplays } from './gameView.js'
 import { dispatchAction, subscribe, save } from './gameLogic.js' //leftClick, rightClick,
-export {  }
+export { popupWindow }
 
 
 
@@ -16,6 +16,8 @@ export {  }
 
 // add listeners for difficulty buttons: #easy # medium #hard 
 const setupListeners = () => {
+    document.querySelector('.title').addEventListener('click', popupWindow)
+    document.querySelector('.popup_yes').addEventListener('click', popupWindowOut)
     DOMstrings.easy.addEventListener('click', () => { dispatchAction({type: 'changeDifficulty', payload: 'easy' })})
     DOMstrings.medium.addEventListener('click', () => { dispatchAction({type: 'changeDifficulty', payload: 'medium' })})
     DOMstrings.hard.addEventListener('click', () => { dispatchAction({type: 'changeDifficulty', payload: 'hard' })})
@@ -42,8 +44,29 @@ const setupListeners = () => {
     })
 }
 
+let popupWindowOut = () => {
+    DOMstrings.backdrop.classList.add('display_none')
+    DOMstrings.popupWindow.classList.remove('window_in')
+}
+
+let popupWindow = ( message ) => {
+    if ( message === 'winner') {
+        DOMstrings.popupMassage.innerHTML = 'woop woop - You just found all hiden bombs'
+        // continue or do something else
+    } else if ( message === 'loser') {
+        DOMstrings.popupMassage.innerHTML = 'woop woop - You just divede your self in milions of pices'
+        // continue or do something else    
+    }
+    DOMstrings.popupWindow.classList.add('window_in')
+    DOMstrings.backdrop.classList.remove('display_none')
+
+    DOMstrings.backdrop.addEventListener('click', () => { 
+        popupWindowOut()
+    })
+}
+
 let sendTime = ( state ) => {
-    changeDisplays(state.time, state.totalToReveal)
+    changeDisplays(state.time, state.mines )
 }
 
 

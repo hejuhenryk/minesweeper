@@ -12,6 +12,62 @@
     font-family: 'Monoton', cursive;
     margin: 0.5rem 0;
 }
+.backdrop {
+    position: fixed;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    background: #0F183299;
+    /* display: none; */
+}
+
+.popup_window {
+    position: absolute;
+    display: flex;
+    z-index: 11;
+    width: 40vw;
+    height: 30vh;
+    min-width: 10rem;
+    background: #F3F7F8;
+    border: #98C9E9 2px solid;
+    border-radius: 6px;
+    top: 30vh;
+    flex-direction: column;
+    justify-content: space-evenly;
+    left: 50%;
+    transform: translateY(-100vh);
+    transition: .5s;
+  
+ }
+
+.window_in {
+    transform: translateY(0vh) translateX(-50%);
+}
+
+.display_none {
+    display: none;
+}
+
+.popup_message {
+    text-align: center;
+    color: 98C9E9;
+}
+
+.popup_actions {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.popup_actions button {
+    border-radius: 5px;
+    border: #98C9E9 1px solid;
+    padding: 0.2rem ;
+    min-width: 3rem;
+    cursor: pointer;
+    font-size: .7rem;
+
+}
+
 
 .main {
     display: flex;

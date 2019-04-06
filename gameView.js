@@ -11,12 +11,17 @@ const DOMstrings = {
     thisHard: document.querySelector('.thisHard'), 
     minefield: document.querySelector('#minefield'), 
     timer: document.querySelector('#time_counter'),
-    mines: document.querySelector('#mines_counter')
-}
+    mines: document.querySelector('#mines_counter'), 
+    backdrop: document.querySelector('.backdrop'),
+    popupWindow: document.querySelector('.popup_window'), 
+    popupMassage: document.querySelector('.popup_message'),
+    popupYes: document.querySelector('.popup_yes')
 
+}
+//"https://www.flaticon.com/authors/freepik"  *Designed by Freepik from www.flaticon.com* 
 const imgSrc = {
-    mine: './grafic/mine.png',
-    flag: './grafic/flag.jpg'
+    mine: './grafic/mine.svg',
+    flag: './grafic/flag.svg'
 }
 let displays = {
     timer: display('time_counter', 150, 3),
@@ -90,8 +95,8 @@ const draw = ( status, canvasSelector) => {
         let fieldX = 0
         let fieldY = 0
         context.beginPath()
-        for( let i = 0 ; i < status[0].length ; i++ , fieldY += (tileSize) ){
-                for( let j = 0 ; j < status.length + 1  ; j++, fieldX += (tileSize) ){
+        for( let i = 0 ; i < status.length ; i++ , fieldY += (tileSize) ){
+                for( let j = 0 ; j < status[0].length + 1  ; j++, fieldX += (tileSize) ){
                 if (j ===  status[0].length ) fieldX = -tileSize
                 context.strokeStyle='#9f9f9f';
                 context.rect(fieldX, fieldY, tileSize, tileSize);
@@ -107,13 +112,17 @@ const draw = ( status, canvasSelector) => {
                     drowImg(imgSrc.flag, i, j)
                 } else if ( status[j][i] === 'm') {
                     drowImg(imgSrc.mine, i, j)
+                } else if ( status[j][i] === undefined ) {
+                    context.fillStyle = '#9f9f9f';
+                    context.fillRect((i * tileSize) + 0.1*tileSize, (j * tileSize) + 0.1*tileSize, tileSize- 0.2*tileSize, tileSize- 0.2*tileSize);
                 } else {
+                    context.clearRect((i * tileSize) + 0.1*tileSize, (j * tileSize) + 0.1*tileSize, tileSize- 0.2*tileSize, tileSize- 0.2*tileSize)
                     context.beginPath();
                     context.font=`${0.7*tileSize}px sans-serif`;
-                    // clearFild(true, x, y)
-                    context.fillStyle = '#2f2f2f';
-                    // context.fillText(`a`, (i * tileSize) + 0.3*tileSize, (j * tileSize) + 0.75*tileSize);
-                    context.fillText(`${status[j][i] === undefined ? '' : status[j][i]}`, (i * tileSize) + 0.3*tileSize, (j * tileSize) + 0.75*tileSize);
+                    context.fillStyle = '#6F6D80';
+                    context.fillText(`${status[j][i] === undefined ? '' :
+                    status[j][i] === 0 ? '':
+                    status[j][i]}`, (i * tileSize) + 0.3*tileSize, (j * tileSize) + 0.75*tileSize);
                 }
             }
         }
