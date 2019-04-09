@@ -1,13 +1,4 @@
-import { popupWindow } from "./main.js";
 
-// const _currentState = {
-//     board: [0,0,0],
-//     status: "notStarted" // #notStarted #started #gameOver #winner
-//     // moze cos jeszcze
-// }
-
-// export const changeStatusAction = (status) => ({ type: "changeStatus", payload: {status}})
-// export const clickedAction = (x) => ({ type: "clicked", payload: {x}})
 
 let _curState = {
     board: [], 
@@ -77,15 +68,17 @@ export const setDifficulty = (diff) => {
     _curState.difficulty = diff
 }
 
-export const getSize = difficulty => {
+export let customSize = { wide: undefined , hight: undefined, mines: undefined} 
+
+export const getSize = ( difficulty ) => {
     if ( difficulty === 'easy'){
         return { wide: 8, hight: 6, mines: 9}
     } else if ( difficulty === 'medium'){
         return { wide: 10, hight: 8, mines: 20}
     } else if ( difficulty === 'hard'){
         return { wide:12   , hight:12, mines: 59}
-    } else {
-        alert('oh No no size')
+    } else if ( difficulty === 'custom') {
+        return { wide: customSize.wide   , hight: customSize.hight , mines: customSize.mines}
     }
 }
 
@@ -143,22 +136,18 @@ const update = (action, state) => {
         // setup new board
         const newBoard = setupMinefield(gameSize.wide, gameSize.hight);
         return { 
-            ...state, 
+            ...state,
+            mines: { //*
+                tofind: undefined,
+                flagedAs: 0
+            },
             totalToReveal: ToReveal,
             board: newBoard.map( arr => [...arr]), 
             difficulty: action.payload
         }
-
     } else if (action.type === "leftClick") {
-        // let newBoard = state.board.map( arr => [...arr])
-        // leftClickAction(action.payload.x, action.payload.y, newBoard)
-        // return {...state, board: newBoard.map( arr => [...arr])}
         return leftClickAction(action.payload.x, action.payload.y, state)
     } else if (action.type === "rightClick") {
-        // let newBoard = [...state.board]
-        // rightClickAction(action.payload.x, action.payload.y, newBoard)
-        // state.board.length = 0;
-        // return {...state, board: newBoard.map( arr => [...arr])}
         return rightClickAction(action.payload.x, action.payload.y, state)
     }
     return  null
@@ -221,7 +210,11 @@ const leftClickAction = (x, y, state) => {
         
         if ( newState.status === 'notStarted' ) {
             newState.board = []
-            //newState.totalToReveal = gameSize.wide * gameSize.hight;
+            newState.mines =  {
+                tofind: gameSize.mines,
+                flagedAs: 0
+            }
+            console.log(newState.mines)
             newState.startTimer()
             newState.status = 'started'
             minefield = setupMinefield(gameSize.wide, gameSize.hight).map( arr => [...arr]);
@@ -232,10 +225,10 @@ const leftClickAction = (x, y, state) => {
         if( minefield[y][x].isMine() ){
             newState.status = 'gameOver';
             revealAll(minefield)
-            popupWindow('loser')
             return { ...newState, board: minefield.map( arr => [...arr]) }    
         } else if ( !minefield[y][x].isRevealed() ) {
             revealOne( x, y, minefield, newState )
+            console.log(`${newState.totalToReveal} , ${newState.mines.tofind}`)
             if ( minefield[y][x].findMines() === 0 ) {
                 checkNeighbours(x, y, minefield, newState);
             }
@@ -258,7 +251,6 @@ const rightClickAction = (x, y, state) => {
                 newState.mines.tofind--
                 if (newState.mines.tofind === 0 && newState.mines.flagedAs <= gameSize.mines ) {
                     newState.status = 'winner';
-                    popupWindow('winner')
                 }
             };
         } else if (!minefield[y][x].isFlagget()){
@@ -274,9 +266,10 @@ const rightClickAction = (x, y, state) => {
 let revealOne = (x, y, mineArr, state) => {
     state.totalToReveal--
     if (state.totalToReveal === state.mines.tofind && state.status === 'started') { 
-        popupWindow('winner')
         state.status = 'winner'
     }
+    console.log(state.totalToReveal, state.mines.tofind )
+
     mineArr[y][x].setReveal()
 }
 

@@ -13,7 +13,13 @@
 
     <div class="backdrop display_none"></div>
     <div class="popup_window">
-        <h2 class="popup_message">popup message</h2>
+        <h2 class="popup_message">
+            <p>Minesweeper - try to clear a board containing hidden "mines"
+                 without detonating any of them, use clues about the number of neighboring mines
+            </p>
+            <p> Icones *Designed by Freepik from <a href="https://www.flaticon.com"> www.flaticon.com</a>* </p>
+            <p>Enjoy <a href="https://github.com/hejuhenryk/minesweeper2"> Marcin Sawczuk-Szymkiewicz</a></p>
+        </h2>
         <div class="popup_actions">
             <button class="popup_yes">Continue</button>
             <!-- <button class="popup_no">no</button> -->
@@ -23,7 +29,7 @@
 
         <div class="minefield_contaier">
             <div class="title">
-                <h3>MinesweepeR</h3>
+                <h2>MinesweepeR</h2>
             </div>
             <canvas id="minefield"></canvas>
             <div class="difficulties">
@@ -44,7 +50,11 @@
                 <div class="display">
                     <canvas id="mines_counter"></canvas>
                 </div>
-                <!-- <div class="emoji"> ;)</div> -->
+                <div class="navigation-mobile">
+                    <div class="nav-bar nav-bar__top"></div>
+                    <div class="nav-bar nav-bar__middle" ></div>
+                    <div class="nav-bar nav-bar__bottom"></div>
+                </div>
                 <div class="display">
                     <canvas id="time_counter"></canvas>
                 </div>

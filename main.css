@@ -7,12 +7,16 @@
 */
 body {
     background: #F3F7F8;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: .8rem
 }
 
-.title h3 {
+.title h2 {
     color: #0F1832 ;
     text-align: center;
     font-family: 'Monoton', cursive;
+    font-size: 2rem;
     margin: 0.5rem 0;
 }
 .backdrop {
@@ -25,11 +29,11 @@ body {
 }
 
 .popup_window {
-    position: absolute;
+    position: fixed;
     display: flex;
     z-index: 11;
     width: 40vw;
-    height: 30vh;
+    height: 40vh;
     min-width: 10rem;
     background: #F3F7F8;
     border: #98C9E9 2px solid;
@@ -41,7 +45,11 @@ body {
     transform: translateY(-100vh);
     transition: .5s;
   
- }
+}
+.popup_window a {
+    text-decoration: none;
+    color: #98C9E9
+}
 
 .window_in {
     transform: translateY(0vh) translateX(-50%);
@@ -71,6 +79,38 @@ body {
 
 }
 
+/* sliders  */
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+      overflow: hidden;
+      width: 60%;
+      -webkit-appearance: none;
+      background-color: #8A9296
+      ;
+    }
+    input[type='range']::-webkit-slider-runnable-track {
+      height: .3rem;
+      -webkit-appearance: none;
+      color: #98C9E9;
+      margin: 0 0;
+    }
+    input[type='range']::-webkit-slider-thumb {
+      width: 0.3rem;
+      -webkit-appearance: none;
+      height: .3rem;
+      cursor: ew-resize;
+      background: #0F1832;
+      box-shadow: -30rem 0 0 30rem #98C9E9;
+      border-radius: 50%;
+    }
+  }
+  
+  input[type="range"]::-moz-range-progress {
+    width: 100%
+  }
+  
+/* end of sliders */
 
 .main {
     display: flex;
@@ -130,6 +170,7 @@ body {
 .footer {
     display: flex;
     justify-content: center;
+    align-items: baseline 
     margin: .2rem 0;
     align-items: bottom;
     bottom: 5rem;
@@ -145,6 +186,45 @@ body {
     height: 2rem;
 }
 
+/*******************************/
+/****** hamburger nav bars *****/
+/*******************************/
+
+.navigation-mobile {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 3px;
+    height: .5rem;
+
+}
+
+.nav-bar {
+    height: 0.2rem;
+    width: 1rem;
+    background: black;
+    transition: 0.5s ease-in-out;
+}
+
+
+
+.toRight {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.leftUp {
+    transform-origin: left center;
+    transform: rotateZ(45deg) translateX(0.28rem) ;
+}
+.rightDown {
+    transform-origin: left center;
+
+    transform: rotateZ(-45deg)  translateX(0.28rem);
+}
+.toLeft {
+    transform: translateX(-1rem)
+}
 
 
 .display canvas {

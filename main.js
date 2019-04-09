@@ -1,23 +1,28 @@
-import { DOMstrings, showDifficulty, showState, tileSize, changeDisplays } from './gameView.js'
-import { dispatchAction, subscribe, save, getSize } from './gameLogic.js' //leftClick, rightClick,
-export { popupWindow }
+import { DOMstrings, showDifficulty, showState, tileSize, changeDisplays,
+     popupWindow, popupWindowOff, popupWindowOn, backdropOn, backdropOff } from './gameView.js'
+import { dispatchAction, subscribe, save, getSize} from './gameLogic.js' //leftClick, rightClick,
 
 
-
-
-// const changeDifficulty = difficulty => {
-
-//     // update game state
-//     resetGame();
-//     setDifficulty(difficulty);
-//     // update user interface #buttons ## new bord
-//     showDifficulty(difficulty);
-// }
-
-// add listeners for difficulty buttons: #easy # medium #hard 
 const setupListeners = () => {
-    document.querySelector('.title').addEventListener('click', popupWindow)
-    document.querySelector('.popup_yes').addEventListener('click', popupWindowOut)
+    DOMstrings.title.addEventListener('click', () => {
+        popupWindow('info');
+        backdropOn();
+        popupWindowOn();
+    })
+    // nasluchuj hamburgera
+    DOMstrings.navBars.addEventListener('click', () => {
+        popupWindow('custom');
+        backdropOn();
+        popupWindowOn();
+         })
+    DOMstrings.backdrop.addEventListener('click', () => {
+        backdropOff();
+        popupWindowOff();
+    })
+    DOMstrings.popupYes.addEventListener('click', () => {
+        backdropOff();
+        popupWindowOff();
+    })
     DOMstrings.easy.addEventListener('click', () => { dispatchAction({type: 'changeDifficulty', payload: 'easy' })})
     DOMstrings.medium.addEventListener('click', () => { dispatchAction({type: 'changeDifficulty', payload: 'medium' })})
     DOMstrings.hard.addEventListener('click', () => { dispatchAction({type: 'changeDifficulty', payload: 'hard' })})
@@ -39,35 +44,25 @@ const setupListeners = () => {
                 x: Math.floor(e.offsetX/tileSize),
                 y: Math.floor(e.offsetY/tileSize)
             }
-            
         })
     })
 }
 
-let popupWindowOut = () => {
-    DOMstrings.backdrop.classList.add('display_none')
-    DOMstrings.popupWindow.classList.remove('window_in')
-}
-
-let popupWindow = ( message ) => {
-    if ( message === 'winner') {
-        DOMstrings.popupMassage.innerHTML = 'woop woop - You just found all hiden bombs'
-        // continue or do something else
-    } else if ( message === 'loser') {
-        DOMstrings.popupMassage.innerHTML = 'woop woop - You just divede your self in milions of pices'
-        // continue or do something else    
-    }
-    DOMstrings.popupWindow.classList.add('window_in')
-    DOMstrings.backdrop.classList.remove('display_none')
-
-    DOMstrings.backdrop.addEventListener('click', () => { 
-        popupWindowOut()
-    })
-}
-
-let sendToDispaly = ( state ) => {
-    let minesToShow = getSize(state.difficulty).mines - state.mines.flagedAs
+const sendToDispaly = ( state ) => {
+    let minesToShow = getSize(state.difficulty).mines - state.mines.flagedAs;
     changeDisplays(state.time, minesToShow )
+}
+
+const gameResult = ( state ) => {
+    if ( state.status === 'gameOver' ) {
+        popupWindow('loser');
+        popupWindowOn();
+        backdropOn();
+    } else if ( state.status === 'winner') {
+        popupWindow('winner')
+        popupWindowOn();
+        backdropOn();
+    }
 }
 
 
@@ -81,26 +76,19 @@ export const udawajLewy = (X,Y ) => {
         }
     })
 }
-export const udawajPrawy = (X,Y ) => {
-    dispatchAction({
-        type: 'rightClick',
-        payload: {
-            x: X,
-            y: Y
-        }
-    })
-}
 
 let init = () => {
-    subscribe(showDifficulty)
-   subscribe(pokaz)
-    subscribe(showState)
-    subscribe(sendToDispaly)
+    subscribe(showDifficulty);
+    // subscribe(pokaz);
+    subscribe(showState);
+    subscribe(sendToDispaly);
+    subscribe(gameResult);
     // subscribe(displayTime)
-    // subscribe(displayMines)
-    save()
+    // subscribe(displayMines);
+    save();
     setupListeners();
-    dispatchAction({type: 'changeDifficulty', payload: 'medium' })
+    dispatchAction({type: 'changeDifficulty', payload: 'medium' });
+
 }
 
 window.onload = () => {
